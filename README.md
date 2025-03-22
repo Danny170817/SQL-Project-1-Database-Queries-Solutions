@@ -25,7 +25,6 @@ This repository contains a collection of **SQL queries** designed to solve vario
   - Aggregate functions (SUM, AVG, COUNT)
   - JOIN operations (INNER, LEFT, RIGHT, FULL)
   - Subqueries & Common Table Expressions (CTEs)
-  - Window functions & ranking
 - Easy-to-follow structure for learning and practice.
 
 ---
