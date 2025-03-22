@@ -152,7 +152,7 @@ as
 (
 select* ,
 	case
-		when extract(hour from sale_time)<12 then "Morning"
+	when extract(hour from sale_time)<12 then "Morning"
         when extract(hour from sale_time)between 12 and 17 then "Afternoon"
         else "Evening"
 	End as shift
