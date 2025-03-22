@@ -95,59 +95,71 @@ FROM retail_sales
 WHERE category = "Beauty";
 ```
 
-### **Q.5 Write a SQL query to find the top 5 highest-selling products based on total sales.**
+### **Q.5 Write a SQL query to find all transactions where the total_sale is greater than 1000.**
 #### **Solution:**
 ```sql
-SELECT product_name, SUM(total_sale) AS total_revenue
-FROM retail_sales
-GROUP BY product_name
-ORDER BY total_revenue DESC
-LIMIT 5;
+select count(*) as row_count
+from retail_sales
+where total_sale>1000;
 ```
 
-### **Q.6 Write a SQL query to count the number of unique customers who made a purchase in the last 6 months.**
+### **Q.6 Write a SQL query to find the total number of transactions (transaction_id) made by each gender in each category.**
 #### **Solution:**
 ```sql
-SELECT COUNT(DISTINCT customer_id) AS unique_customers
-FROM retail_sales
-WHERE sale_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH);
+select count(*),gender,category
+from retail_sales
+group by category,gender
+order by count(*) ASC;  
 ```
 
-### **Q.7 Write a SQL query to retrieve the total sales per month for the year 2023.**
+### **Q.7 Write a SQL query to calculate the average sale for each month. Find out best selling month in each year**
 #### **Solution:**
 ```sql
-SELECT EXTRACT(MONTH FROM sale_date) AS month, SUM(total_sale) AS monthly_sales
+SELECT 
+    EXTRACT(YEAR FROM sale_date) AS sale_year,
+    EXTRACT(MONTH FROM sale_date) AS sale_month,
+    AVG(total_sale) as avg_sales,
+    rank() over(partition by extract(year from sale_date)order by avg(total_sale)desc) as rank_order
 FROM retail_sales
-WHERE EXTRACT(YEAR FROM sale_date) = 2023
-GROUP BY month
-ORDER BY month;
+GROUP BY 1,2
+ORDER BY sale_year, 3 Desc;
 ```
 
-### **Q.8 Write a SQL query to find customers who have placed more than 3 orders.**
+### **Q.8 Write a SQL query to find the top 5 customers based on the highest total sales **
 #### **Solution:**
 ```sql
-SELECT customer_id, COUNT(order_id) AS order_count
-FROM retail_sales
-GROUP BY customer_id
-HAVING order_count > 3;
+select customer_id,sum(total_sale)
+from retail_sales
+group by 1 
+order by 2 desc
+limit 5;
+
 ```
 
-### **Q.9 Write a SQL query to calculate the percentage contribution of each product category to total sales.**
+### **Q.9 Write a SQL query to find the number of unique customers who purchased items from each category.**
 #### **Solution:**
 ```sql
-SELECT category, 
-       (SUM(total_sale) / (SELECT SUM(total_sale) FROM retail_sales)) * 100 AS percentage_contribution
-FROM retail_sales
-GROUP BY category;
+select category,count(distinct customer_id)
+from retail_sales
+group by 1;
 ```
 
-### **Q.10 Write a SQL query to list employees who have been working for more than 5 years, sorted by tenure.**
+### **Q.10 Write a SQL query to create each shift and number of orders (Example Morning <=12, Afternoon Between 12 & 17, Evening >17)**
 #### **Solution:**
 ```sql
-SELECT employee_id, name, DATEDIFF(CURDATE(), hire_date) / 365 AS tenure_years
-FROM employees
-WHERE DATEDIFF(CURDATE(), hire_date) > 5 * 365
-ORDER BY tenure_years DESC;
+with hourly_sale
+as
+(
+select* ,
+	case
+		when extract(hour from sale_time)<12 then "Morning"
+        when extract(hour from sale_time)between 12 and 17 then "Afternoon"
+        else "Evening"
+	End as shift
+from retail_sales)
+select count(*),shift
+from hourly_sale
+group by shift;
 ```
 
 ---
