@@ -31,7 +31,7 @@ This repository contains a collection of **SQL queries** designed to solve vario
 ---
 
 ## **Dataset**
-The project uses a sample database containing coloumns such as:
+The project uses a sample database containing columns such as:
 - **Employees** (Employee details, department, salary, etc.)
 - **Orders** (Customer transactions, products, order status, etc.)
 - **Products** (Product catalog with pricing and category information)
